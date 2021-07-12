@@ -6,9 +6,9 @@ import {
   Type,
 } from "@nestjs/common";
 import { ModuleRef } from "@nestjs/core";
-import { metadataKeys } from "../constants";
 import { AccessPolicy } from "./access-policy.interface";
 import { AccessPolicyService } from "./access-policy.service";
+import { metadataKeys } from "./constants";
 
 @Injectable()
 export abstract class AccessPolicyGuard implements CanActivate {
