@@ -19,7 +19,8 @@ export class AccessPolicyService {
 
       /**All of the condition groups are passed. */
       let isConditionsPassed = true;
-      for (const group of conditions) {
+      for (const v of conditions) {
+        const group = v instanceof Array ? v : [v];
         /**One of the conditions of the group passed. */
         let isGroupPassed = false;
         for (const condition of group) {

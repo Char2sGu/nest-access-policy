@@ -7,6 +7,9 @@ export interface AccessPolicyStatement<
 > {
   actions: Action[];
   effect: Effect;
-  conditions?: AccessPolicyCondition<Action, Request>[][];
+  conditions?: (
+    | AccessPolicyCondition<Action, Request>
+    | AccessPolicyCondition<Action, Request>[]
+  )[];
   reason?: string;
 }
