@@ -1,0 +1,40 @@
+{
+  "name": "nest-access-policy",
+  "version": "0.0.0",
+  "description": "",
+  "main": "lib/index.js",
+  "scripts": {
+    "test": "npm run test:unit & npm run test:e2e",
+    "test:unit": "jest --config ./test/unit/jest.config.ts",
+    "test:e2e": "jest --config ./test/e2e/jest.config.ts",
+    "prebuild": "rimraf lib",
+    "build": "tsc -b"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TheNightmareX/nest-access-policy.git"
+  },
+  "author": {
+    "name": "Char2s",
+    "email": "Char2s@outlook.com"
+  },
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/TheNightmareX/nest-access-policy/issues"
+  },
+  "homepage": "https://github.com/TheNightmareX/nest-access-policy#readme",
+  "devDependencies": {
+    "@nestjs/common": "^8.0.1",
+    "@nestjs/core": "^8.0.1",
+    "@nestjs/testing": "^8.0.1",
+    "@types/jest": "^26.0.24",
+    "jest": "^27.0.6",
+    "reflect-metadata": "^0.1.13",
+    "rimraf": "^3.0.2",
+    "rxjs": "^7.2.0",
+    "ts-jest": "^27.0.3",
+    "ts-node": "^10.1.0",
+    "tslib": "^2.3.0",
+    "typescript": "^4.3.5"
+  }
+}

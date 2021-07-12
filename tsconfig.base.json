@@ -1,0 +1,20 @@
+{
+  "compilerOptions": {
+    "composite": true,
+    "target": "ES2020",
+    "module": "CommonJS",
+    "lib": ["ESNext", "DOM", "DOM.Iterable", "ScriptHost"],
+    "baseUrl": ".",
+    "strict": true,
+    "declaration": true,
+    "declarationMap": true,
+    "sourceMap": true,
+    "moduleResolution": "node",
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "forceConsistentCasingInFileNames": true,
+    "importHelpers": true
+  }
+}
