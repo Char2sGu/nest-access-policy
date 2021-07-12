@@ -9,7 +9,12 @@ export class AccessPolicyService {
     { action, ...args }: Parameters<AccessPolicyCondition>[0]
   ) {
     let allow: boolean | null = null;
-    for (const { actions, conditions, effect, reason } of policy.statements) {
+    for (const {
+      actions,
+      conditions = [],
+      effect,
+      reason,
+    } of policy.statements) {
       if (!actions.includes(action)) continue;
 
       /**All of the condition groups are passed. */

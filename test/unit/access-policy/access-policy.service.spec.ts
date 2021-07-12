@@ -22,8 +22,8 @@ describe("AccessPolicyService", () => {
               statements: [
                 {
                   actions: ["_"],
-                  conditions: [[async () => true]],
                   effect: Effect.Allow,
+                  conditions: [[async () => true]],
                 },
               ],
             },
@@ -41,7 +41,6 @@ describe("AccessPolicyService", () => {
               statements: [
                 {
                   actions: [""],
-                  conditions: [],
                   effect: Effect.Allow,
                 },
               ],
@@ -60,7 +59,6 @@ describe("AccessPolicyService", () => {
               statements: [
                 {
                   actions: [""],
-                  conditions: [],
                   effect: Effect.Allow,
                 },
               ],
@@ -79,13 +77,12 @@ describe("AccessPolicyService", () => {
               statements: [
                 {
                   actions: [""],
-                  conditions: [],
                   effect: Effect.Allow,
                 },
                 {
                   actions: [""],
-                  conditions: [[async () => false]],
                   effect: Effect.Allow,
+                  conditions: [[async () => false]],
                 },
               ],
             },

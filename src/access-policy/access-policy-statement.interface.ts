@@ -6,7 +6,7 @@ export interface AccessPolicyStatement<
   Request = unknown
 > {
   actions: Action[];
-  conditions: AccessPolicyCondition<Action, Request>[][];
   effect: Effect;
+  conditions?: AccessPolicyCondition<Action, Request>[][];
   reason?: string;
 }
