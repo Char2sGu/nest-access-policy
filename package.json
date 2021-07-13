@@ -14,6 +14,18 @@
     "type": "git",
     "url": "git+https://github.com/TheNightmareX/nest-access-policy.git"
   },
+  "keywords": [
+    "api",
+    "crud",
+    "typescript",
+    "web",
+    "rest",
+    "restful",
+    "permissions",
+    "access-control",
+    "nestjs",
+    "declarative"
+  ],
   "author": {
     "name": "Char2s",
     "email": "Char2s@outlook.com"
