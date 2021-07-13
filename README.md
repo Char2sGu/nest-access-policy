@@ -13,6 +13,8 @@ An `AccessPolicy` is a special provider where we define our access statements.
 > A common usage is to make access policies and controllers have one-to-one relationships.
 
 ```ts
+// books.access-policy.ts
+
 @Injetable()
 export class BooksAccessPolicy implements AccessPolicy {
   statements: AccessPolicyStatement[] = [
@@ -37,6 +39,8 @@ Therefore, it is recommended to allow all the actions in the first statement as 
 Now let's define the really important parts:
 
 ```ts
+// books.access-policy.ts
+
 @Injetable()
 export class BooksAccessPolicy implements AccessPolicy {
   private isOwn: AccessPolicyCondition = async ({ req }) =>
@@ -97,6 +101,8 @@ Although the statements above work well, they lack of error messages. Actually t
 Let's fix this:
 
 ```ts
+// books.access-policy.ts
+
 @Injetable()
 export class BooksAccessPolicy implements AccessPolicy {
   // ...
@@ -128,6 +134,8 @@ Now we've done with the `AccessPolicy`, it only takes a few steps to apply it.
 Since the `AccessPolicy` is injectable, it should be added to the `providers` list of the module. Whatsmore, we will use a `AccessPolicyGuard` to protect our routes, who injects `AccessPolicyService` to check the statements, so we also need to import the `AccessPolicyModule`:
 
 ```ts
+// books.module.ts
+
 @Module({
   // ...
   imports: [
@@ -148,6 +156,8 @@ export class BooksModule {}
 Finally, of course, use the guard and apply the policy:
 
 ```ts
+// books.controller.ts
+
 @UseAccessPolicies(BooksAccessPolicy)
 @UseGuards(AccessPolicyGuard)
 @Controller()
