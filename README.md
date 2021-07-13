@@ -39,16 +39,16 @@ Now let's define the really important parts:
 ```ts
 @Injetable()
 export class BooksAccessPolicy implements AccessPolicy {
-  private isOwn: AccessPolicyCondition = async ({ req, user }) =>
-    (await this.getBook(req)).owner == user;
+  private isOwn: AccessPolicyCondition = async ({ req }) =>
+    (await this.getBook(req)).owner == req.user;
 
   private notOwn: AccessPolicyCondition = async (ctx) =>
     !(await this.isOwn(ctx));
 
-  private isPublic: AccessPolicyCondition = async ({ req, user }) =>
+  private isPublic: AccessPolicyCondition = async ({ req }) =>
     (await this.getBook(req)).isPublic;
 
-  private notImmutable: AccessPolicyCondition = async ({ req, user }) =>
+  private notImmutable: AccessPolicyCondition = async ({ req }) =>
     !(await this.getBook(req)).isImmutable;
 
   statements: AccessPolicyStatement[] = [
@@ -153,3 +153,5 @@ Finally, of course, use the guard and apply the policy:
 @Controller()
 export class BooksController {}
 ```
+
+> To access `req.user`, you should ensure the `AuthGuard` is before the `AccessPolicyGuard`. See the [request lifecycle](https://docs.nestjs.com/faq/request-lifecycle) for more help.
