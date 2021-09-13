@@ -6,9 +6,9 @@ import {
   Type,
 } from "@nestjs/common";
 import { ModuleRef } from "@nestjs/core";
+import { ACCESS_POLICY_TOKEN } from "./access-policy-token.symbol";
 import { AccessPolicy } from "./access-policy.interface";
 import { AccessPolicyService } from "./access-policy.service";
-import { metadataKeys } from "./constants";
 
 @Injectable()
 export abstract class AccessPolicyGuard implements CanActivate {
@@ -34,7 +34,7 @@ export abstract class AccessPolicyGuard implements CanActivate {
 
   getAccessPolicies(controllerType: Type) {
     const tokens: (string | symbol | Type)[] | undefined = Reflect.getMetadata(
-      metadataKeys.ACCESS_POLICY_TOKEN,
+      ACCESS_POLICY_TOKEN,
       controllerType
     );
     return tokens?.map((token) => this.moduleRef.get<any, AccessPolicy>(token));
