@@ -11,7 +11,7 @@ import { AccessPolicy } from "./access-policy.interface";
 import { AccessPolicyService } from "./access-policy.service";
 
 @Injectable()
-export abstract class AccessPolicyGuard implements CanActivate {
+export class AccessPolicyGuard implements CanActivate {
   @Inject()
   moduleRef!: ModuleRef;
 
