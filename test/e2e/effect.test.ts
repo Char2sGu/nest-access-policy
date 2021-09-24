@@ -5,7 +5,7 @@ import { prepare } from "./prepare.func";
 describe("Effect", () => {
   let requester: supertest.SuperTest<supertest.Test>;
 
-  it("should pass when no condition is matched", async () => {
+  it("should fail when no condition is matched", async () => {
     requester = await prepare(() => null, []);
     await requester.get("/").expect(403);
   });
