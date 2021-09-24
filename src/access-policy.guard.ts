@@ -24,7 +24,8 @@ export class AccessPolicyGuard implements CanActivate {
     if (policies) {
       const action = context.getHandler().name;
       const request = context.switchToHttp().getRequest();
-      await this.checkPolicies(policies, action, request);
+      for (const policy of policies)
+        await this.service.check(policy, { action, req: request });
     }
 
     return true;
@@ -36,14 +37,5 @@ export class AccessPolicyGuard implements CanActivate {
       controllerType
     );
     return tokens?.map((token) => this.moduleRef.get<any, AccessPolicy>(token));
-  }
-
-  protected async checkPolicies(
-    policies: AccessPolicy[],
-    action: string,
-    request: unknown
-  ) {
-    for (const policy of policies)
-      await this.service.check(policy, { action, req: request });
   }
 }
