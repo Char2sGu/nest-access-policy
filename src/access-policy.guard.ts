@@ -24,7 +24,11 @@ export class AccessPolicyGuard implements CanActivate {
     if (policies) {
       const action = context.getHandler().name;
       for (const policy of policies)
-        await this.service.check(policy, action, policy.context(context));
+        await this.service.check(
+          policy,
+          action,
+          policy.context(context, action)
+        );
     }
 
     return true;

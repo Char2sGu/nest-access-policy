@@ -6,5 +6,5 @@ export interface AccessPolicy<
   Context = unknown
 > {
   statements: AccessPolicyStatement<Action, Context>[];
-  context(context: ExecutionContext): Context;
+  context(context: ExecutionContext, action: Action): Context;
 }
