@@ -1,4 +1,5 @@
 import { ForbiddenException, Injectable } from "@nestjs/common";
+import { Effect } from "src";
 import { AccessPolicyCondition } from "./access-policy-condition.interface";
 import { AccessPolicy } from "./access-policy.interface";
 
@@ -35,9 +36,9 @@ export class AccessPolicyService {
       }
 
       // forbid if any `allow` conditions are not passed
-      if (effect == "allow") allow = isConditionsPassed;
+      if (effect == Effect.Allow) allow = isConditionsPassed;
       // forbid if any `forbid` conditions are passed
-      if (effect == "forbid") allow = isConditionsPassed ? false : allow;
+      if (effect == Effect.Forbid) allow = isConditionsPassed ? false : allow;
 
       if (allow == false) throw new ForbiddenException(reason);
     }
