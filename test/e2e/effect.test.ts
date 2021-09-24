@@ -1,86 +1,36 @@
-import { Test } from "@nestjs/testing";
-import { AccessPolicyModule, Effect } from "src";
+import { Effect } from "src";
 import supertest from "supertest";
-import { TestingAccessPolicy } from "./testing.access-policy";
-import { TestingController } from "./testing.controller";
+import { prepare } from "./prepare.func";
 
-describe("Basic", () => {
+describe("Effect", () => {
   let requester: supertest.SuperTest<supertest.Test>;
 
-  beforeEach(async () => {
-    const module = await Test.createTestingModule({
-      imports: [AccessPolicyModule],
-      controllers: [TestingController],
-      providers: [TestingAccessPolicy],
-    }).compile();
-
-    const app = await module.createNestApplication().init();
-    requester = supertest(app.getHttpServer());
+  it("should pass when no condition is matched", async () => {
+    requester = await prepare(() => null, []);
+    await requester.get("/").expect(403);
   });
 
-  let response: supertest.Response;
-
-  describe("None Matched", () => {
-    beforeEach(async () => {
-      response = await requester.get("/a/");
-    });
-
-    it("should return status 403", () => {
-      expect(response.status).toBe(403);
-    });
+  it("should pass when all conditions are passed", async () => {
+    requester = await prepare(
+      () => null,
+      [{ actions: ["get"], effect: Effect.Allow }]
+    );
+    await requester.get("/").expect(200);
   });
 
-  describe("All Allow Passed", () => {
-    beforeEach(async () => {
-      jest
-        .spyOn(TestingAccessPolicy.prototype, "statements", "get")
-        .mockReturnValue([
-          {
-            actions: ["a"],
-            effect: Effect.Allow,
-          },
-        ]);
-      response = await requester.get("/a/");
-    });
-
-    it("should return status 200", () => {
-      expect(response.status).toBe(200);
-    });
+  it("should fail when any Allow statements is failed", async () => {
+    requester = await prepare(
+      () => null,
+      [{ actions: ["get"], effect: Effect.Allow, conditions: [() => false] }]
+    );
+    await requester.get("/").expect(403);
   });
 
-  describe("Any Allow Not Passed", () => {
-    beforeEach(async () => {
-      jest
-        .spyOn(TestingAccessPolicy.prototype, "statements", "get")
-        .mockReturnValue([
-          {
-            actions: ["a"],
-            effect: Effect.Allow,
-            conditions: [() => false],
-          },
-        ]);
-      response = await requester.get("/a/");
-    });
-
-    it("should return status 403", () => {
-      expect(response.status).toBe(403);
-    });
-  });
-
-  describe("Any Forbid Passed", () => {
-    beforeEach(async () => {
-      jest
-        .spyOn(TestingAccessPolicy.prototype, "statements", "get")
-        .mockReturnValue([
-          {
-            actions: ["a"],
-            effect: Effect.Forbid,
-          },
-        ]);
-    });
-
-    it("should return status 403", () => {
-      expect(response.status).toBe(403);
-    });
+  it("should fail when any Forbid statements is passed", async () => {
+    requester = await prepare(
+      () => null,
+      [{ actions: ["get"], effect: Effect.Forbid }]
+    );
+    await requester.get("/").expect(403);
   });
 });

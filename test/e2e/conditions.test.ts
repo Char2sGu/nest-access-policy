@@ -1,129 +1,98 @@
-import { Test } from "@nestjs/testing";
-import { AccessPolicyModule, Effect } from "src";
+import { Effect } from "src";
 import supertest from "supertest";
-import { TestingAccessPolicy } from "./testing.access-policy";
-import { TestingController } from "./testing.controller";
+import { prepare } from "./prepare.func";
 
 describe("Conditions", () => {
   let requester: supertest.SuperTest<supertest.Test>;
 
-  beforeEach(async () => {
-    const module = await Test.createTestingModule({
-      imports: [AccessPolicyModule],
-      controllers: [TestingController],
-      providers: [TestingAccessPolicy],
-    }).compile();
-
-    const app = await module.createNestApplication().init();
-    requester = supertest(app.getHttpServer());
-  });
-
-  let response: supertest.Response;
-
-  describe("Logic", () => {
+  describe("Logical", () => {
     describe("And", () => {
-      describe("All Passed", () => {
-        beforeEach(async () => {
-          jest
-            .spyOn(TestingAccessPolicy.prototype, "statements", "get")
-            .mockReturnValue([
-              {
-                actions: ["a"],
-                effect: Effect.Allow,
-                conditions: [() => true, () => true],
-              },
-            ]);
-
-          response = await requester.get("/a/");
-        });
-
-        it("should return status 200", () => {
-          expect(response.status).toBe(200);
-        });
+      it("should pass when all the conditions are passed", async () => {
+        requester = await prepare(
+          () => null,
+          [
+            {
+              actions: ["get"],
+              effect: Effect.Allow,
+              conditions: [() => true, () => true],
+            },
+          ]
+        );
+        await requester.get("/").expect(200);
       });
 
-      describe("Any Not Passed", () => {
-        beforeEach(async () => {
-          jest
-            .spyOn(TestingAccessPolicy.prototype, "statements", "get")
-            .mockReturnValue([
-              {
-                actions: ["a"],
-                effect: Effect.Allow,
-                conditions: [() => true, () => false],
-              },
-            ]);
-
-          response = await requester.get("/a/");
-        });
-
-        it("should return status 403", () => {
-          expect(response.status).toBe(403);
-        });
+      it("should fail when any condition is failed", async () => {
+        requester = await prepare(
+          () => null,
+          [
+            {
+              actions: ["get"],
+              effect: Effect.Allow,
+              conditions: [() => true, () => false],
+            },
+          ]
+        );
+        await requester.get("/").expect(403);
       });
     });
 
     describe("Or", () => {
-      describe("All Passed", () => {
-        beforeEach(async () => {
-          jest
-            .spyOn(TestingAccessPolicy.prototype, "statements", "get")
-            .mockReturnValue([
-              {
-                actions: ["a"],
-                effect: Effect.Allow,
-                conditions: [[() => true, () => true]],
-              },
-            ]);
-
-          response = await requester.get("/a/");
-        });
-
-        it("should return status 200", () => {
-          expect(response.status).toBe(200);
-        });
+      it("should pass when all the conditions are passed", async () => {
+        requester = await prepare(
+          () => null,
+          [
+            {
+              actions: ["get"],
+              effect: Effect.Allow,
+              conditions: [[() => true]],
+            },
+          ]
+        );
+        await requester.get("/").expect(200);
       });
 
-      describe("Partial Passed", () => {
-        beforeEach(async () => {
-          jest
-            .spyOn(TestingAccessPolicy.prototype, "statements", "get")
-            .mockReturnValue([
-              {
-                actions: ["a"],
-                effect: Effect.Allow,
-                conditions: [[() => true, () => false]],
-              },
-            ]);
+      it("should pass when partial conditions are passed", async () => {
+        requester = await prepare(
+          () => null,
+          [
+            {
+              actions: ["get"],
+              effect: Effect.Allow,
+              conditions: [[() => true, () => false]],
+            },
+          ]
+        );
+        await requester.get("/").expect(200);
+      });
 
-          response = await requester.get("/a/");
-        });
-
-        it("should return status 200", () => {
-          expect(response.status).toBe(200);
-        });
+      it("should fail when all the condition are failed", async () => {
+        requester = await prepare(
+          () => null,
+          [
+            {
+              actions: ["get"],
+              effect: Effect.Allow,
+              conditions: [[() => false]],
+            },
+          ]
+        );
       });
     });
   });
 
   describe("Async", () => {
-    describe("Not Passed", () => {
-      beforeEach(async () => {
-        jest
-          .spyOn(TestingAccessPolicy.prototype, "statements", "get")
-          .mockReturnValue([
-            {
-              actions: ["a"],
-              effect: Effect.Allow,
-              conditions: [async () => false],
-            },
-          ]);
-        response = await requester.get("/a/");
-      });
-
-      it("should return status 403", () => {
-        expect(response.status).toBe(403);
-      });
+    it("should fail when all the conditions are failed", async () => {
+      requester = await prepare(
+        () => null,
+        [
+          {
+            actions: ["get"],
+            effect: Effect.Allow,
+            conditions: [async () => false],
+          },
+        ]
+      );
+      await requester.get("/").expect(403);
     });
   });
 });
