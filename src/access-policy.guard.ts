@@ -30,7 +30,7 @@ export class AccessPolicyGuard implements CanActivate {
     return true;
   }
 
-  getPolicies(controllerType: Type) {
+  protected getPolicies(controllerType: Type) {
     const tokens: (string | symbol | Type)[] | undefined = Reflect.getMetadata(
       ACCESS_POLICY_TOKEN,
       controllerType
@@ -38,7 +38,11 @@ export class AccessPolicyGuard implements CanActivate {
     return tokens?.map((token) => this.moduleRef.get<any, AccessPolicy>(token));
   }
 
-  checkPolicies(policies: AccessPolicy[], action: string, request: unknown) {
+  protected checkPolicies(
+    policies: AccessPolicy[],
+    action: string,
+    request: unknown
+  ) {
     const promises = policies.map((policy) =>
       this.service.check(policy, { action, req: request })
     );
