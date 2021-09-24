@@ -38,14 +38,12 @@ export class AccessPolicyGuard implements CanActivate {
     return tokens?.map((token) => this.moduleRef.get<any, AccessPolicy>(token));
   }
 
-  protected checkPolicies(
+  protected async checkPolicies(
     policies: AccessPolicy[],
     action: string,
     request: unknown
   ) {
-    const promises = policies.map((policy) =>
-      this.service.check(policy, { action, req: request })
-    );
-    return Promise.all(promises);
+    for (const policy of policies)
+      await this.service.check(policy, { action, req: request });
   }
 }
