@@ -39,6 +39,8 @@ export class AccessPolicyGuard implements CanActivate {
       ACCESS_POLICY_INJECTION_TOKENS,
       controllerType
     );
-    return tokens?.map((token) => this.moduleRef.get<any, AccessPolicy>(token));
+    return tokens?.map((token) =>
+      this.moduleRef.get<any, AccessPolicy>(token, { strict: false })
+    );
   }
 }
