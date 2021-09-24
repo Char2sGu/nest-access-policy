@@ -19,7 +19,7 @@ export class AccessPolicyGuard implements CanActivate {
   service!: AccessPolicyService;
 
   async canActivate(context: ExecutionContext) {
-    const policies = this.getAccessPolicies(context.getClass());
+    const policies = this.getPolicies(context.getClass());
 
     if (policies) {
       const action = context.getHandler().name;
@@ -32,7 +32,7 @@ export class AccessPolicyGuard implements CanActivate {
     return true;
   }
 
-  getAccessPolicies(controllerType: Type) {
+  getPolicies(controllerType: Type) {
     const tokens: (string | symbol | Type)[] | undefined = Reflect.getMetadata(
       ACCESS_POLICY_TOKEN,
       controllerType
