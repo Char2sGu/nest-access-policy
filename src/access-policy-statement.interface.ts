@@ -8,8 +8,8 @@ export interface AccessPolicyStatement<
   actions: Action[];
   effect: Effect;
   conditions?: (
-    | AccessPolicyCondition<Action, Request>
-    | AccessPolicyCondition<Action, Request>[]
+    | AccessPolicyCondition<Request>
+    | AccessPolicyCondition<Request>[]
   )[];
   reason?: string;
 }

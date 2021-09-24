@@ -1,6 +1,3 @@
-export interface AccessPolicyCondition<
-  Action extends string = string,
-  Request = unknown
-> {
-  ({}: { action: Action; req: Request }): boolean | Promise<boolean>;
+export interface AccessPolicyCondition<Context = unknown> {
+  (context: Context): boolean | Promise<boolean>;
 }

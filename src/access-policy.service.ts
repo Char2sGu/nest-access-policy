@@ -1,14 +1,14 @@
 import { ForbiddenException, Injectable } from "@nestjs/common";
 import { Effect } from "src";
-import { AccessPolicyCondition } from "./access-policy-condition.interface";
 import { AccessPolicy } from "./access-policy.interface";
 
 @Injectable()
 export class AccessPolicyService {
-  async check(
-    policy: AccessPolicy,
-    { action, ...args }: Parameters<AccessPolicyCondition>[0]
-  ) {
+  async check<
+    Policy extends AccessPolicy<Action, Context>,
+    Action extends string,
+    Context extends unknown
+  >(policy: Policy, action: Action, context: Context) {
     let allow: boolean | null = null;
     for (const {
       actions,
@@ -25,7 +25,7 @@ export class AccessPolicyService {
         /**One of the conditions of the group passed. */
         let isGroupPassed = false;
         for (const condition of group) {
-          const isPassed = await condition({ action, ...args });
+          const isPassed = await condition(context);
           if (isPassed) isGroupPassed = true;
         }
 
